@@ -3,11 +3,11 @@ name: Buildozer Android APK
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:   # allows manual runs from GitHub
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest   # stable for Buildozer
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repo
@@ -19,10 +19,19 @@ jobs:
           sudo apt install -y python3-pip python3-setuptools git zip \
              openjdk-17-jdk unzip wget libgl1-mesa-dev libgles2-mesa-dev \
              libpython3-dev python3-virtualenv
-          pip3 install --upgrade Cython virtualenv
+          pip3 install --upgrade Cython virtualenv buildozer
 
-      - name: Install Buildozer
-        run: pip3 install buildozer
+      - name: Install Android SDK Tools
+        run: |
+          wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
+          mkdir -p $HOME/android-sdk/cmdline-tools
+          unzip -q commandlinetools-linux-9477386_latest.zip -d $HOME/android-sdk/cmdline-tools
+          mv $HOME/android-sdk/cmdline-tools/cmdline-tools $HOME/android-sdk/cmdline-tools/tools
+          echo "export ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
+          echo "export PATH=$ANDROID_HOME/cmdline-tools/tools/bin:$ANDROID_HOME/platform-tools:$PATH" >> $GITHUB_ENV
+
+      - name: Accept Android SDK Licenses
+        run: yes | sdkmanager --licenses
 
       - name: Build APK
         run: |
