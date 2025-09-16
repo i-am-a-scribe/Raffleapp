@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04   # stable for Buildozer
+    runs-on: ubuntu-latest   # stable for Buildozer
 
     steps:
       - name: Checkout repo
