@@ -35,6 +35,11 @@ jobs:
           source $GITHUB_ENV
           yes | sdkmanager --licenses || true
 
+      - name: Install Required Android Build Tools
+        run: |
+          source $GITHUB_ENV
+          sdkmanager "platforms;android-33" "platform-tools" "build-tools;33.0.2"
+
       - name: Build APK
         run: |
           source $GITHUB_ENV
